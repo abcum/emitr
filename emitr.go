@@ -14,11 +14,14 @@
 
 package emitr
 
+// Emitter represents an event emitter.
 type Emitter struct {
 	once map[string][]func()
 	when map[string][]func()
 }
 
+// Once adds a callback which is called only once when an
+// event is emitted, and then remove immediately after.
 func (e *Emitter) Once(name string, fn func()) {
 	if e.once == nil {
 		e.once = make(map[string][]func())
@@ -26,6 +29,8 @@ func (e *Emitter) Once(name string, fn func()) {
 	e.once[name] = append(e.once[name], fn)
 }
 
+// When adds a callback which is called each and every
+// time that an event is emitted.
 func (e *Emitter) When(name string, fn func()) {
 	if e.when == nil {
 		e.when = make(map[string][]func())
@@ -33,6 +38,7 @@ func (e *Emitter) When(name string, fn func()) {
 	e.when[name] = append(e.when[name], fn)
 }
 
+// Emit runs callbacks for the specified event name.
 func (e *Emitter) Emit(name string) {
 
 	if _, ok := e.when[name]; ok {
