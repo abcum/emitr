@@ -21,7 +21,7 @@ type Emitter struct {
 }
 
 // Once adds a callback which is called only once when an
-// event is emitted, and then remove immediately after.
+// event is emitted, and then removed immediately after.
 func (e *Emitter) Once(name string, fn func()) {
 	if e.once == nil {
 		e.once = make(map[string][]func())
@@ -38,7 +38,9 @@ func (e *Emitter) When(name string, fn func()) {
 	e.when[name] = append(e.when[name], fn)
 }
 
-// Emit runs callbacks for the specified event name.
+// Emit runs callbacks for the specified event name,
+// and ensures that one-off events, are removed when
+// the event has finished emitting.
 func (e *Emitter) Emit(name string) {
 
 	if _, ok := e.when[name]; ok {
