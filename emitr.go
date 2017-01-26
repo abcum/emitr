@@ -61,17 +61,21 @@ func (e *Emitter) Emit(name string) {
 	e.lock.Lock()
 	defer e.lock.Unlock()
 
-	if _, ok := e.when[name]; ok {
-		for i := len(e.when[name]) - 1; i >= 0; i-- {
-			e.when[name][i]()
+	if e.when != nil {
+		if _, ok := e.when[name]; ok {
+			for i := len(e.when[name]) - 1; i >= 0; i-- {
+				e.when[name][i]()
+			}
 		}
 	}
 
-	if _, ok := e.once[name]; ok {
-		for i := len(e.once[name]) - 1; i >= 0; i-- {
-			e.once[name][i]()
-			e.once[name][i] = nil
-			e.once[name] = e.once[name][:i]
+	if e.once != nil {
+		if _, ok := e.once[name]; ok {
+			for i := len(e.once[name]) - 1; i >= 0; i-- {
+				e.once[name][i]()
+				e.once[name][i] = nil
+				e.once[name] = e.once[name][:i]
+			}
 		}
 	}
 
